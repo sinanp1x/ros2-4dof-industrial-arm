@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+<robot name="four_dof_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:property name="baseparam" value="1.0 1.0 0.3"/>
+    <xacro:property name="linkparam" value="0.2 0.2 1.0"/>
+    <xacro:property name="efparam" value="0.2 0.2 0.5"/>
+
+    <xacro:macro name="build_link" params="name size xyz">
+        <link name="${name}">
+            <visual>
+                <origin xyz="${xyz}" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${size}"/>
+                </geometry>
+            </visual>
+            <collision>
+                <origin xyz="${xyz}" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${size}"/>
+                </geometry>
+            </collision>
+        </link>        
+    </xacro:macro>
+
+    <xacro:macro name="c_joint" params="name type parent child xyz axis ll ul ef ve">
+        <joint name="${name}" type="${type}">
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <origin xyz="${xyz}" rpy="0 0 0"/>
+            <axis xyz="${axis}"/>
+            <limit
+			lower="${ll}"
+			upper="${ul}"
+			effort="${ef}"
+			velocity="${ve}"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:build_link
+        name="base_link"
+        size="${baseparam}"
+        xyz="0 0 0"
+    />
+
+    <xacro:build_link
+        name="link1"
+        size="${linkparam}"
+        xyz="0 0 0.5"
+    />
+    <xacro:c_joint
+        name="joint1"
+        type="revolute"
+        parent="base_link"
+        child="link1"
+        xyz="0 0 0.15"
+        axis="0 0 1"
+        ll="-3.14159"
+        ul="3.14159"
+        ef="10"
+        ve="1.0"
+    />
+
+    <xacro:build_link
+        name="link2"
+        size="${linkparam}"
+        xyz="0 0.1 0.4"
+    />     
+    <xacro:c_joint
+        name="joint2"
+        type="revolute"
+        parent="link1"
+        child="link2"
+        xyz="0 0.1 0.9"
+        axis="0 1 0"
+        ll="-1.5708"
+        ul="1.5708"
+        ef="10"
+        ve="1.0"
+    />
+
+    <xacro:build_link
+        name="link3"
+        size="${linkparam}"
+        xyz="0 -0.1 0.4"
+    />    
+    <xacro:c_joint
+        name="joint3"
+        type="revolute"
+        parent="link2"
+        child="link3"
+        xyz="0 0 0.8"
+        axis="0 1 0"
+        ll="-1.5708"
+        ul="1.5708"
+        ef="10"
+        ve="1.0"
+    />
+
+    <xacro:build_link
+        name="link4"
+        size="${efparam}"
+        xyz="0 0.1 0.15"
+    />    
+    <xacro:c_joint
+        name="joint4"
+        type="revolute"
+        parent="link3"
+        child="link4"
+        xyz="0 0 0.8"
+        axis="0 1 0"
+        ll="-1.5708"
+        ul="1.5708"
+        ef="10"
+        ve="1.0"
+    />
+
+</robot>
